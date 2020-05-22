@@ -15,11 +15,13 @@ Resets block position back to the top and creates a new column in the chart.
 **width**     
 Specifies the width of the new column. Values too small will result in overlap between columns.
 
-`ref.block(block_name = '')`     
+`ref.block(block_name = '', file_name = '')`     
 -----
 Places a block in the chart, its sprite and name. If no local resource for the sprite is found attempts to download off the wiki.     
 **block_name**     
-Specifies the name of the block to be placed. When name in an empty string or no name is provided a break in the column is created instead (see `ref.space()`)
+Specifies the name of the block to be placed. When name in an empty string or no name is provided a break in the column is created instead (see `ref.space()`)     
+**file_name**     
+Specifies the name of the sprite image on the wiki. If no name is provided a guess is made based on block name.
 
 `ref.space()`     
 -----
