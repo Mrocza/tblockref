@@ -1,6 +1,8 @@
 from tblockref import reference
 
 #numbers denote width of new column
+#blocks with filenames that do not match the blockname
+#need filename specified after ' > '
 blocklist = """310
 Dirt Block
 Grass Block
@@ -17,6 +19,7 @@ Silt Block
 Sand Block
 Hardened Sand Block
 Sandstone Block
+Smooth Sandstone
 Ebonsand Block
 Hardened Ebonsand Block
 Ebonsandstone Block
@@ -51,6 +54,8 @@ Living Wood
 Leaf Block
 Living Mahogany
 Mahogany Leaf Block
+Bamboo
+Large Bamboo Block
 
 Honey Block
 Crispy Honey Block
@@ -68,6 +73,7 @@ Hay
 Glowing Mushroom
 Cactus
 Coralstone Block
+Shell Pile
 Cog
 Asphalt Block
 Crystal Block
@@ -95,12 +101,12 @@ Chartreuse Moss Block
 Teal Moss Block
 Purple Moss Block
 Fire Moss Block
-Amethyst
-Topaz
-Sapphire
-Emerald
-Ruby
-Diamond
+Amethyst Stone Block > Amethyst_(placed).png
+Topaz Stone Block > Topaz_(placed).png
+Sapphire Stone Block > Sapphire_(placed).png
+Emerald Stone Block > Emerald_(placed).png
+Ruby Stone Block > Ruby_(placed).png
+Diamond Stone Block > Diamond_(placed).png
 
 Gray Brick
 Stone Slab
@@ -110,14 +116,18 @@ Red Brick
 Iridescent Brick
 Mudstone Brick
 Ebonstone Brick
+Crimstone Brick
 Pearlstone Brick
 Snow Brick
 Ice Brick
 Sunplate Block
 Rainbow Brick
 Pink Brick
+Cracked Pink Brick
 Green Brick
+Cracked Green Brick
 Blue Brick
+Cracked Blue Brick
 Lihzahrd Brick
 
 Gray Stucco
@@ -178,9 +188,10 @@ Copper Brick
 Copper Plating
 Tin Brick
 Tin Plating
+Iron Brick
+Lead Brick
 Silver Brick
 Tungsten Brick
-
 Gold Brick
 Platinum Brick
 Meteorite Brick
@@ -197,6 +208,10 @@ Titanstone Block
 Chlorophyte Brick
 Shroomite Plating
 Luminite Brick
+Nebula Brick
+Solar Brick
+Stardust Brick
+Vortex Brick
 
 Nebula Fragment Block
 Solar Fragment Block
@@ -223,7 +238,7 @@ Slime Block
 Pink Slime Block
 Frozen Slime Block
 
-Active Stone Block
+Active Stone Block > Stone_Block_(placed).png
 Inactive Stone Block
 Conveyor Belt (Clockwise)
 Conveyor Belt (Counter Clockwise)"""
@@ -235,10 +250,13 @@ r = reference()
 for i in blocklist:
   if i.isnumeric():
     r.column(int(i))
-  elif i == '':
-    r.space()
   else:
-    r.block(i)
+    if i.find(' > ') == -1:
+        r.block(i)
+    else:
+        j = i.split(' > ')
+        r.block(j[0],j[1])
 
+#r.update_all()
 r.embed()
 r.out('output.svg')

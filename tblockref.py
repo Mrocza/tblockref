@@ -6,7 +6,7 @@ class reference:
   def __init__(self, scale = 2, margin = 6):
     self.__margin = margin
     self.__scale = scale
-    
+
     self.__block_dict = {}
     self.__height = 0
     self.__width = 0
@@ -15,32 +15,37 @@ class reference:
     self.__pos_x = self.__margin
     self.__pos_y = self.__margin
 
-  def block(self, block_name = ''):
+  def block(self, block_name = '', file_name = ''):
     if block_name == '':
       self.space()
       return
-    
-    file_name = block_name.replace(' ','_')+'_(placed)'
-    
-    if block_name == 'Active Stone Block':
-      file_name = 'Stone_Block_(placed).png'
-    elif os.path.isfile('res/'+file_name+'.png'):
-      file_name += '.png'
-    elif os.path.isfile('res/'+file_name+'.gif'):
-      file_name += '.gif'
-    else:
-      try:
-        response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.png')
-        file_name += '.png'
-      except ExplicitException:
-        try:
-          response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.gif')
+
+    if file_name == '':
+        file_name = block_name.replace(' ','_')+'_(placed)'
+
+        if os.path.isfile('res/'+file_name+'.png'):
+          file_name += '.png'
+        elif os.path.isfile('res/'+file_name+'.gif'):
           file_name += '.gif'
-        except ExplicitException:
-          raise FileNotFoundError(block_name+' is not a valid block name')
-      html = response.read()
-      image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
-      urllib.request.urlretrieve(image_html, 'res/'+file_name)
+        else:
+          try:
+            response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.png')
+            file_name += '.png'
+          except ExplicitException:
+            try:
+              response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.gif')
+              file_name += '.gif'
+            except ExplicitException:
+              raise FileNotFoundError(block_name+' does not exist on the wiki under expected file name')
+          html = response.read()
+          image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
+          urllib.request.urlretrieve(image_html, 'res/'+file_name)
+
+    else:
+        response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name)
+        html = response.read()
+        image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
+        urllib.request.urlretrieve(image_html, 'res/'+file_name)
 
     self.__block_dict[block_name] = {'sprite_x':str(self.__pos_x),
                                    'sprite_y':str(self.__pos_y),
@@ -66,14 +71,14 @@ class reference:
     self.__column_width = column_width #set current column width
     self.__width += column_width
 
-  def update_all():
+  def update_all(self):
     i=0
     list_of_files = os.listdir('res/')
-    
+
     for file in list_of_files:
       i+=1
       print('{0}/{1} updating {2}...'.format(i, len(list_of_files), file))
-      
+
       response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file)
       html = response.read()
       image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
@@ -84,11 +89,11 @@ class reference:
     for block in self.__block_dict:
       with open(self.__block_dict[block]['sprite_href'], "rb") as f:
         self.__block_dict[block]['sprite_href'] = 'data:image/png;base64,'+base64.b64encode(f.read()).decode()
-    
+
   def out(self, output):
     width = self.__width+self.__margin
     height = self.__height+self.__margin
-    
+
     f = open(output,'w')
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     f.write(('<svg width="{0}"'

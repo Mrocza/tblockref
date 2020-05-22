@@ -1,5 +1,4 @@
 ***
-
 `ref = tblockref.reference(scale = 2, margin = 6)`
 -----
 This is the class constructor. It allows setting up base properties of the reference chart.      
@@ -44,4 +43,3 @@ TODO: Write a function that converts glyphs to SVG symbols and converts text to 
 Save the reference to a file.     
 **file_name**     
 Specifies the path to file and filename.
-
