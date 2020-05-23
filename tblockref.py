@@ -21,25 +21,25 @@ class reference:
       return
 
     if file_name == '':
-        file_name = block_name.replace(' ','_')+'_(placed)'
+      file_name = block_name.replace(' ','_')+'_(placed)'
 
-        if os.path.isfile('res/'+file_name+'.png'):
+      if os.path.isfile('res/'+file_name+'.png'):
+        file_name += '.png'
+      elif os.path.isfile('res/'+file_name+'.gif'):
+        file_name += '.gif'
+      else:
+        try:
+          response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.png')
           file_name += '.png'
-        elif os.path.isfile('res/'+file_name+'.gif'):
-          file_name += '.gif'
-        else:
+        except:
           try:
-            response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.png')
-            file_name += '.png'
-          except ExplicitException:
-            try:
-              response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.gif')
-              file_name += '.gif'
-            except ExplicitException:
+            response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name+'.gif')
+            file_name += '.gif'
+          except:
               raise FileNotFoundError(block_name+' does not exist on the wiki under expected file name')
-          html = response.read()
-          image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
-          urllib.request.urlretrieve(image_html, 'res/'+file_name)
+        html = response.read()
+        image_html = re.search('<div class="fullMedia"><p><a href="(.*)\?version',html.decode("utf-8")).group(1)
+        urllib.request.urlretrieve(image_html, 'res/'+file_name)
 
     else:
         response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name)

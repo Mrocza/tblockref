@@ -55,7 +55,7 @@ Leaf Block
 Living Mahogany
 Mahogany Leaf Block
 Bamboo
-Large Bamboo Block
+Large Bamboo
 
 Honey Block
 Crispy Honey Block
@@ -67,6 +67,7 @@ Cloud
 Rain Cloud
 Snow Cloud
 Flesh Block
+Lesion Block
 Bone Block
 Pumpkin
 Hay
@@ -78,7 +79,10 @@ Cog
 Asphalt Block
 Crystal Block
 Martian Conduit Plating
+Echo Block
+Anti-Portal Block
 Bubble
+Grate
 Living Fire Block
 Living Demon Fire Block
 Living Frost Fire Block
@@ -145,6 +149,8 @@ Honeyfall Block
 Lavafall Block
 Sandfall Block
 Snowfall Block
+Blue Starry Block
+Gold Starry Block
 
 White Team Block
 Red Team Block
