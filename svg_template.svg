@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="{{ svg_width }}" height="{{ svg_height }}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="{{ svg_width }}" height="{{ svg_height }}" fill="#fff"/>
+  <g>
+    {% for block in block_values %}
+    <image x="{{ block.sprite_x }}" y="{{ block.sprite_y }}" width="{{ block.sprite_width }}" height="{{ block.sprite_height }}" image-rendering="optimizeSpeed" xlink:href="{{ block.sprite_href }}"/>
+    {% endfor %}
+  </g>
+  <g fill="#000000" font-family="Andy" font-size="24px">
+    {% for block in block_values %}
+    <text x="{{ block.text_x }}" y="{{ block.text_y }}"><tspan>{{ block.text_tspan }}</tspan></text>
+    {% endfor %}
+  </g>
+</svg>

@@ -1,8 +1,8 @@
 from tblockref import reference
 
-#numbers denote width of new column
-#blocks with filenames that do not match the blockname
-#need filename specified after ' > '
+# numbers denote width of new column
+# blocks with filenames that do not match the blockname
+# need filename specified after ' > '
 blocklist = """310
 Dirt Block
 Grass Block
@@ -263,6 +263,6 @@ for i in blocklist:
         j = i.split(' > ')
         r.block(j[0],j[1])
 
-#r.update_all()
+# r.update_all()
 r.embed()
 r.out('output.svg')
