@@ -1,4 +1,4 @@
-from tblockref import reference
+from tblockref import Reference
 
 # numbers denote width of new column
 # blocks with filenames that do not match the blockname
@@ -251,7 +251,7 @@ Conveyor Belt (Counter Clockwise)"""
 
 blocklist = blocklist.split('\n')
 
-r = reference()
+r = Reference()
 
 for i in blocklist:
   if i.isnumeric():
@@ -263,6 +263,5 @@ for i in blocklist:
         j = i.split(' > ')
         r.block(j[0],j[1])
 
-# r.update_all()
 r.embed()
 r.out('output.svg')

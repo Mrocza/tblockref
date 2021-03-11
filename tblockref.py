@@ -4,105 +4,115 @@ import base64
 import urllib.request, urllib.error
 from jinja2 import Template
 from bs4 import BeautifulSoup
+from datetime import datetime
 
-class reference:
+
+
+class Reference:
     def __init__(self, scale = 2, margin = 6):
-        self.__margin = margin
-        self.__scale = scale
+        self._margin = margin
+        self._scale = scale
 
-        self.__block_dict = {}
-        self.__height = 0
-        self.__width = 0
-        self.__column_width = 0
+        self._block_dict = {}
+        self._height = 0
+        self._width = 0
+        self._column_width = 0
 
-        self.__pos_x = self.__margin
-        self.__pos_y = self.__margin
+        self._pos_x = self._margin
+        self._pos_y = self._margin
 
     def block(self, block_name = None, file_name = None):
         if not block_name:
             self.space()
             return
 
+        print(f'Adding block {block_name} ...')
+
         if not file_name:
             file_name = block_name.replace(' ','_')+'_(placed)'
             for format in ['.png', '.gif']:
-                if os.path.isfile('res/'+file_name+format):
+                if self._isfile(file_name + format):
                     file_name += format
-                    break
-                if self.__isfile(file_name+format):
-                    file_name += format
-                    self.__getfile(file_name)
+                    self._getfile(file_name)
                     break
         else:
-            if not os.path.isfile('res/'+file_name):
-                __getfile(filename)
+            self._getfile(file_name)
 
         # set data for current block
-        self.__block_dict[block_name] = {
-            'sprite_x': str(self.__pos_x),
-            'sprite_y': str(self.__pos_y),
-            'sprite_width': str(24*self.__scale),
-            'sprite_height': str(24*self.__scale),
+        self._block_dict[block_name] = {
+            'sprite_x': str(self._pos_x),
+            'sprite_y': str(self._pos_y),
+            'sprite_width': str(24*self._scale),
+            'sprite_height': str(24*self._scale),
             'sprite_href': 'res/'+file_name,
-            'text_x': str(self.__pos_x+30*self.__scale),
-            'text_y': str(self.__pos_y+12*self.__scale),
+            'text_x': str(self._pos_x+30*self._scale),
+            'text_y': str(self._pos_y+12*self._scale),
             'text_tspan': block_name
         }
 
         # advance to next block posiotion
-        self.__pos_y += 12*self.__scale
+        self._pos_y += 12*self._scale
 
         # adjust document height to the highest y value reached
-        if self.__height < self.__pos_y + 12*self.__scale:
-            self.__height = self.__pos_y + 12*self.__scale
+        if self._height < self._pos_y + 12*self._scale:
+            self._height = self._pos_y + 12*self._scale
 
     def space(self):
-        self.__pos_y += 24*self.__scale
+        self._pos_y += 24*self._scale
 
     def column(self, column_width):
-        self.__pos_y = self.__margin # reset y value back to top
-        self.__pos_x += self.__column_width # adjust x value by previous column width
-        self.__column_width = column_width # set current column width
-        self.__width += column_width # increase document width to fit new column
+        self._pos_y = self._margin # reset y value back to top
+        self._pos_x += self._column_width # adjust x value by previous column width
+        self._column_width = column_width # set current column width
+        self._width += column_width # increase document width to fit new column
 
-    def __isfile(self, file_name):
+    def _isfile(self, file_name):
         try:
             urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name)
         except urllib.error.HTTPError as e:
             # Return code error (e.g. 404, 501, ...)
-            print(f'HTTPError: {e.code}')
+            print(f'{file_name} HTTPError: {e.code}')
             return False
         except urllib.error.URLError as e:
             # Not an HTTP-specific error (e.g. connection refused)
-            print(f'URLError: {e.reason}')
+            print(f'{file_name} URLError: {e.reason}')
             return False
         else:
             return True
 
-    def __getfile(self, file_name):
-        response = urllib.request.urlopen('https://terraria.gamepedia.com/File:'+file_name)
+    def _getfile(self, file_name):
+        # Retrieving a direct image url:
+        response = urllib.request.urlopen(
+            'https://terraria.gamepedia.com/File:'+file_name)
         soup = BeautifulSoup(response.read(), 'html.parser')
         image_href = soup.find("div", {"class": "fullMedia"}).a['href']
-        urllib.request.urlretrieve(image_href, 'res/'+file_name)
-
-    def update_all(self):
-        list_of_files = os.listdir('res/')
-
-        for i, file in enumerate(list_of_files, start=1):
-            print(f'{i}/{len(list_of_files)} updating {file}...')
-            self.__getfile(file)
+        # Getting last modification timestamp from the url parameter 'cb'
+        parsed = urllib.parse.urlparse(image_href)
+        mod_date_string = (urllib.parse.parse_qs(parsed.query)['cb'])[0]
+        mod_date = datetime.strptime(mod_date_string, '%Y%m%d%H%M%S')
+        # Getting last modification timestamp for local file
+        if os.path.isfile('res/'+file_name):
+            last_update = datetime.fromtimestamp(
+                os.path.getmtime('res/'+file_name))
+        else:
+            last_update = datetime(1970,1,1)
+        # Download if newer
+        if mod_date > last_update:
+            urllib.request.urlretrieve(image_href, 'res/'+file_name)
 
     def embed(self):
-        for block in self.__block_dict:
-            with open(self.__block_dict[block]['sprite_href'], "rb") as f:
-                self.__block_dict[block]['sprite_href'] = 'data:image/png;base64,'+base64.b64encode(f.read()).decode()
+        for block in self._block_dict:
+            with open(self._block_dict[block]['sprite_href'], "rb") as f:
+                self._block_dict[block]['sprite_href'] = (
+                    'data:image/png;base64,'
+                    + base64.b64encode(f.read()).decode())
 
     def out(self, output):
         with open('svg_template.svg', 'r') as f:
             svg = Template(f.read(), trim_blocks=True, lstrip_blocks=True)
         with open(output, 'w') as f:
             f.write(svg.render(
-                svg_width= self.__width + self.__margin,
-                svg_height= self.__height + self.__margin,
-                block_values= self.__block_dict.values()
+                svg_width= self._width + self._margin,
+                svg_height= self._height + self._margin,
+                block_values= self._block_dict.values()
             ))
