@@ -3,7 +3,7 @@ from tblockref import Reference
 # numbers denote width of new column
 # blocks with filenames that do not match the blockname
 # need filename specified after ' > '
-blocklist = """310
+blocklist = """330
 Bloc de terre > Dirt_Block_(placed).png
 Bloc d'herbe > Grass_Block_(placed).png
 Bloc d'herbe corrompue > Corrupt_Grass_Block_(placed).png
@@ -75,22 +75,22 @@ Champignon luisant > Glowing_Mushroom_(placed).png
 Cactus > Cactus_(placed).png
 Bloc de corail > Coralstone_Block_(placed).png
 Tas de coquillages > Shell_Pile_(placed).png
-Roue dentée > Cog_(placed).png
+Roue dentée > Cog_(placed).gif
 Bloc d'asphalte > Asphalt_Block_(placed).png
 Bloc de cristal > Crystal_Block_(placed).png
 Plaque de conduit martienne > Martian_Conduit_Plating_(placed).png
 Bloc Echo > Echo_Block_(placed).png
 Bloc anti-portail > Anti-Portal_Block_(placed).png
-Bulle > Bubble_(placed).png
+Bulle > Bubble_(placed).gif
 Grille > Grate_(placed).png
-Bloc de feu vivant > Living_Fire_Block_(placed).png
-Bloc de feu démoniaque vivant > Living_Demon_Fire_Block_(placed).png
-Bloc de feu givré vivant > Living_Frost_Fire_Block_(placed).png
-Bloc de feu maudit vivant > Living_Cursed_Fire_Block_(placed).png
-Bloc d'ichor vivant > Living_Ichor_Block_(placed).png
-Bloc de feu intense vivant > Living_Ultrabright_Fire_Block_(placed).png
-Bloc de fumée > Smoke_Block_(placed).png
-290
+Bloc de feu vivant > Living_Fire_Block_(placed).gif
+Bloc de feu démoniaque vivant > Living_Demon_Fire_Block_(placed).gif
+Bloc de feu givré vivant > Living_Frost_Fire_Block_(placed).gif
+Bloc de feu maudit vivant > Living_Cursed_Fire_Block_(placed).gif
+Bloc d'ichor vivant > Living_Ichor_Block_(placed).gif
+Bloc de feu intense vivant > Living_Ultrabright_Fire_Block_(placed).gif
+Bloc de fumée > Smoke_Block_(placed).gif
+300
 Bloc de pierre > Stone_Block_(placed).png
 Bloc de pierre d'ébène > Ebonstone_Block_(placed).png
 Bloc de pierre carmin > Crimstone_Block_(placed).png
@@ -125,7 +125,7 @@ Brique de pierre perlée > Pearlstone_Brick_(placed).png
 Brique de neige > Snow_Brick_(placed).png
 Brique de glace > Ice_Brick_(placed).png
 Bloc de soleil > Sunplate_Block_(placed).png
-Brique arc-en-ciel > Rainbow_Brick_(placed).png
+Brique arc-en-ciel > Rainbow_Brick_(placed).gif
 Brique rose > Pink_Brick_(placed).png
 Brique rose fissurée > Cracked_Pink_Brick_(placed).png
 Brique verte > Green_Brick_(placed).png
@@ -142,15 +142,15 @@ Galets de dynastie rouge > Red_Dynasty_Shingles_(placed).png
 Galets de dynastie bleue > Blue_Dynasty_Shingles_(placed).png
 
 Verre > Glass_(placed).png
-Bloc de confetti > Confetti_Block_(placed).png
-Bloc de confetti de minuit > Midnight_Confetti_Block_(placed).png
-Bloc de chute d'eau > Waterfall_Block_(placed).png
-Bloc de chute de miel > Honeyfall_Block_(placed).png
-Bloc de chute de lave > Lavafall_Block_(placed).png
-Bloc de chute de sable > Sandfall_Block_(placed).png
-Bloc de chute de neige > Snowfall_Block_(placed).png
-Bloc étoilé bleu > Blue_Starry_Block_(placed).png
-Bloc étoilé or > Gold_Starry_Block_(placed).png
+Bloc de confetti > Confetti_Block_(placed).gif
+Bloc de confetti de minuit > Midnight_Confetti_Block_(placed).gif
+Bloc de chute d'eau > Waterfall_Block_(placed).gif
+Bloc de chute de miel > Honeyfall_Block_(placed).gif
+Bloc de chute de lave > Lavafall_Block_(placed).gif
+Bloc de chute de sable > Sandfall_Block_(placed).gif
+Bloc de chute de neige > Snowfall_Block_(placed).gif
+Bloc étoilé bleu > Blue_Starry_Block_(placed).gif
+Bloc étoilé or > Gold_Starry_Block_(placed).gif
 
 Bloc de l'équipe blanche > White_Team_Block_(placed).png
 Bloc de l'équipe rouge > Red_Team_Block_(placed).png
@@ -246,8 +246,8 @@ Bloc de gelée glacée > Frozen_Slime_Block_(placed).png
 
 Bloc de pierre actif > Stone_Block_(placed).png
 Bloc de pierre inactif > Inactive_Stone_Block_(placed).png
-Tapis roulant (vers la droite) > Conveyor_Belt_(Clockwise)_(placed).png
-Tapis roulant (vers la gauche) > Conveyor_Belt_(Counter_Clockwise)_(placed).png"""
+Tapis roulant (vers la droite) > Conveyor_Belt_(Clockwise)_(placed).gif
+Tapis roulant (vers la gauche) > Conveyor_Belt_(Counter_Clockwise)_(placed).gif"""
 
 ref = Reference()
 
@@ -259,4 +259,4 @@ for line in blocklist.split('\n'):
         ref.block(*line.split(' > '))
         continue
     ref.block(line)
-ref.out('output.svg')
+ref.out('output-fr.svg')
