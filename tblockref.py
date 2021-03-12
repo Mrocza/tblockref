@@ -1,12 +1,11 @@
 import os
 import re
+import json
 import base64
 import urllib.request, urllib.error
 from jinja2 import Template
 from bs4 import BeautifulSoup
 from datetime import datetime
-
-
 
 class Reference:
     def __init__(self, scale = 2, margin = 6):
@@ -31,6 +30,10 @@ class Reference:
         if not file_name:
             file_name = block_name.replace(' ','_')+'_(placed)'
             for format in ['.png', '.gif']:
+                if os.path.isfile('res/' + file_name + format):
+                    file_name += format
+                    self._getfile(file_name)
+                    break
                 if self._isfile(file_name + format):
                     file_name += format
                     self._getfile(file_name)
@@ -45,9 +48,10 @@ class Reference:
             'sprite_width': str(24*self._scale),
             'sprite_height': str(24*self._scale),
             'sprite_href': 'res/'+file_name,
-            'text_x': str(self._pos_x+30*self._scale),
-            'text_y': str(self._pos_y+12*self._scale),
-            'text_tspan': block_name
+            'text_x': self._pos_x+30*self._scale,
+            'text_y': self._pos_y+12*self._scale,
+            'text_tspan': block_name,
+            'text_tspan_unicode_list': [str(ord(char)) for char in block_name]
         }
 
         # advance to next block posiotion
@@ -81,6 +85,7 @@ class Reference:
             return True
 
     def _getfile(self, file_name):
+        return
         # Retrieving a direct image url:
         response = urllib.request.urlopen(
             'https://terraria.gamepedia.com/File:'+file_name)
@@ -108,11 +113,14 @@ class Reference:
                     + base64.b64encode(f.read()).decode())
 
     def out(self, output):
+        with open('font_data.json', 'r') as f:
+            font_data = json.load(f)
         with open('svg_template.svg', 'r') as f:
             svg = Template(f.read(), trim_blocks=True, lstrip_blocks=True)
         with open(output, 'w') as f:
             f.write(svg.render(
-                svg_width= self._width + self._margin,
-                svg_height= self._height + self._margin,
-                block_values= self._block_dict.values()
+                svg_width = self._width + self._margin,
+                svg_height = self._height + self._margin,
+                block_values = self._block_dict.values(),
+                svg_glyphs = font_data
             ))
