@@ -85,7 +85,6 @@ class Reference:
             return True
 
     def _getfile(self, file_name):
-        return
         # Retrieving a direct image url:
         response = urllib.request.urlopen(
             'https://terraria.gamepedia.com/File:'+file_name)
@@ -105,14 +104,14 @@ class Reference:
         if mod_date > last_update:
             urllib.request.urlretrieve(image_href, 'res/'+file_name)
 
-    def embed(self):
+    def out(self, output):
         for block in self._block_dict:
             with open(self._block_dict[block]['sprite_href'], "rb") as f:
                 self._block_dict[block]['sprite_href'] = (
-                    'data:image/png;base64,'
+                    f'data:image/{os.path.splitext(self._block_dict[block]["sprite_href"])[1][1:]};base64,'
                     + base64.b64encode(f.read()).decode())
 
-    def out(self, output):
+
         with open('font_data.json', 'r') as f:
             font_data = json.load(f)
         with open('svg_template.svg', 'r') as f:
@@ -122,5 +121,8 @@ class Reference:
                 svg_width = self._width + self._margin,
                 svg_height = self._height + self._margin,
                 block_values = self._block_dict.values(),
-                svg_glyphs = font_data
+                svg_glyphs = font_data,
+                text_scale = 0.01176,
+                text_offset_x = -5,
+                text_offset_y = -3
             ))

@@ -249,19 +249,14 @@ Inactive Stone Block
 Conveyor Belt (Clockwise)
 Conveyor Belt (Counter Clockwise)"""
 
-blocklist = blocklist.split('\n')
+ref = Reference()
 
-r = Reference()
-
-for i in blocklist:
-  if i.isnumeric():
-    r.column(int(i))
-  else:
-    if i.find(' > ') == -1:
-        r.block(i)
-    else:
-        j = i.split(' > ')
-        r.block(j[0],j[1])
-
-r.embed()
-r.out('output.svg')
+for line in blocklist.split('\n'):
+    if line.isnumeric():
+        ref.column(int(line))
+        continue
+    if line.find(' > ') != -1:
+        ref.block(*line.split(' > '))
+        continue
+    ref.block(line)
+ref.out('output.svg')

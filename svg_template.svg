@@ -2,25 +2,18 @@
 <svg width="{{ svg_width }}" height="{{ svg_height }}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     {% for id in svg_glyphs %}
-    <symbol id="{{ id }}" width="23" height="30" viewBox="-303 -692 2037 2269">
-      <path d="{{ svg_glyphs[id].d }}" transform="scale(1,-1) translate(0,-800)"/>
-    </symbol>
+    <path id="{{ id }}" d="{{ svg_glyphs[id].d }}" transform="scale({{ text_scale }},{{ -text_scale }})"/>
     {% endfor %}
   </defs>
   <rect width="{{ svg_width }}" height="{{ svg_height }}" fill="#fff"/>
-  <g>
-    {% for block in block_values %}
-    <image x="{{ block.sprite_x }}" y="{{ block.sprite_y }}" width="{{ block.sprite_width }}" height="{{ block.sprite_height }}" image-rendering="optimizeSpeed" xlink:href="{{ block.sprite_href }}"/>
-    {% endfor %}
-  </g>
-  <g>
-    {% set offset_x, offset_y, scale = -5, -22, 1/85 %}
-    {% for block in block_values %}
-    {% set position_x = namespace(value = block.text_x - 5) %}
-    {% for id in block.text_tspan_unicode_list %}
-    <use xlink:href="#{{ id }}" x="{{ position_x.value + offset_x }}"  y="{{ block.text_y + offset_y }}" />
-    {% set position_x.value = position_x.value + svg_glyphs[id]['horiz-adv-x'] * scale %}
-    {% endfor %}
-    {% endfor %}
-  </g>
+  {% for block in block_values %}
+  <image x="{{ block.sprite_x }}" y="{{ block.sprite_y }}" width="{{ block.sprite_width }}" height="{{ block.sprite_height }}" image-rendering="optimizeSpeed" xlink:href="{{ block.sprite_href }}"/>
+  {% endfor %}
+  {% for block in block_values %}
+  {% set position_x = namespace(value = block.text_x) %}
+  {% for id in block.text_tspan_unicode_list %}
+  <use xlink:href="#{{ id }}" x="{{ '%0.2f' % (position_x.value + text_offset_x) }}"  y="{{ block.text_y + text_offset_y }}" />
+  {% set position_x.value = position_x.value + svg_glyphs[id]['horiz-adv-x'] * text_scale %}
+  {% endfor %}
+  {% endfor %}
 </svg>
