@@ -1,9 +1,11 @@
 from tblockref import Reference
 
-# numbers denote width of new column
-# blocks with filenames that do not match the blockname
-# need filename specified after ' > '
-blocklist = """330
+# Type the name of a block to add to the reference
+# If the filename for a sprite does not match the blockname you have to specify
+# the filename after ' > '.
+# Leave an empty line to insert a break in a column.
+# Leave at least two empty lines to break a column and create a new one.
+blocklist = """
 Bloc de terre > Dirt_Block_(placed).png
 Bloc d'herbe > Grass_Block_(placed).png
 Bloc d'herbe corrompue > Corrupt_Grass_Block_(placed).png
@@ -90,7 +92,9 @@ Bloc de feu maudit vivant > Living_Cursed_Fire_Block_(placed).gif
 Bloc d'ichor vivant > Living_Ichor_Block_(placed).gif
 Bloc de feu intense vivant > Living_Ultrabright_Fire_Block_(placed).gif
 Bloc de fumée > Smoke_Block_(placed).gif
-300
+
+
+
 Bloc de pierre > Stone_Block_(placed).png
 Bloc de pierre d'ébène > Ebonstone_Block_(placed).png
 Bloc de pierre carmin > Crimstone_Block_(placed).png
@@ -170,7 +174,9 @@ Pointe > Spike_(placed).png
 Pointe en bois > Wooden_Spike_(placed).png
 
 Toile d'araignée > Cobweb_(placed).png
-390
+
+
+
 Minerai de cuivre > Copper_Ore_(placed).png
 Minerai d'étain > Tin_Ore_(placed).png
 Minerai de fer > Iron_Ore_(placed).png
@@ -250,16 +256,15 @@ Bloc de gelée glacée > Frozen_Slime_Block_(placed).png
 Bloc de pierre actif > Stone_Block_(placed).png
 Bloc de pierre inactif > Inactive_Stone_Block_(placed).png
 Tapis roulant (vers la droite) > Conveyor_Belt_(Clockwise)_(placed).gif
-Tapis roulant (vers la gauche) > Conveyor_Belt_(Counter_Clockwise)_(placed).gif"""
+Tapis roulant (vers la gauche) > Conveyor_Belt_(Counter_Clockwise)_(placed).gif
+"""
 
 ref = Reference()
 
-for line in blocklist.split('\n'):
-    if line.isnumeric():
-        ref.column(int(line))
-        continue
-    if line.find(' > ') != -1:
+blocklist = blocklist.strip('\n')
+for column in blocklist.split('\n\n\n'):
+    column = column.strip('\n')
+    for line in column.split('\n'):
         ref.block(*line.split(' > '))
-        continue
-    ref.block(line)
+    ref.column()
 ref.out('output-fr.svg')

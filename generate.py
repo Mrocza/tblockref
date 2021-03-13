@@ -1,9 +1,11 @@
 from tblockref import Reference
 
-# numbers denote width of new column
-# blocks with filenames that do not match the blockname
-# need filename specified after ' > '
-blocklist = """310
+# Type the name of a block to add to the reference
+# If the filename for a sprite does not match the blockname you have to specify
+# the filename after ' > '.
+# Leave an empty line to insert a break in a column.
+# Leave at least two empty lines to break a column and create a new one.
+blocklist = """
 Dirt Block
 Grass Block
 Corrupt Grass Block
@@ -90,7 +92,9 @@ Living Cursed Fire Block
 Living Ichor Block
 Living Ultrabright Fire Block
 Smoke Block
-290
+
+
+
 Stone Block
 Ebonstone Block
 Crimstone Block
@@ -170,7 +174,9 @@ Spike
 Wooden Spike
 
 Cobweb
-390
+
+
+
 Copper Ore
 Tin Ore
 Iron Ore
@@ -250,16 +256,15 @@ Frozen Slime Block
 Active Stone Block > Stone_Block_(placed).png
 Inactive Stone Block
 Conveyor Belt (Clockwise)
-Conveyor Belt (Counter Clockwise)"""
+Conveyor Belt (Counter Clockwise)
+"""
 
 ref = Reference()
 
-for line in blocklist.split('\n'):
-    if line.isnumeric():
-        ref.column(int(line))
-        continue
-    if line.find(' > ') != -1:
+blocklist = blocklist.strip('\n')
+for column in blocklist.split('\n\n\n'):
+    column = column.strip('\n')
+    for line in column.split('\n'):
         ref.block(*line.split(' > '))
-        continue
-    ref.block(line)
+    ref.column()
 ref.out('output.svg')
