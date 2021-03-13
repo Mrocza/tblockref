@@ -99,12 +99,15 @@ Bloc de marbre > Marble_Block_(placed).png
 Bloc de marbre lisse > Smooth_Marble_Block_(placed).png
 Bloc de granite > Granite_Block_(placed).png
 Bloc de granite lisse > Smooth_Granite_Block_(placed).png
-Bloc de mousse bleue > Blue_Moss_Block_(placed).png
-Bloc de mousse rouge > Red_Moss_Block_(placed).png
-Bloc de mousse marron > Chartreuse_Moss_Block_(placed).png
-Bloc de mousson verte > Teal_Moss_Block_(placed).png
-Bloc de mousse violette > Purple_Moss_Block_(placed).png
-Bloc de mousse de lave > Fire_Moss_Block_(placed).png
+Mousse bleue > Blue_Moss_Block_(placed).png
+Mousse rouge > Red_Moss_Block_(placed).png
+Mousse marron > Chartreuse_Moss_Block_(placed).png
+Mousson verte > Teal_Moss_Block_(placed).png
+Mousse violette > Purple_Moss_Block_(placed).png
+Mousse de lave > Fire_Moss_Block_(placed).png
+Mousse de krypton > Krypton_Moss_Block_(placed).png
+Mousse de xénon > Xenon_Moss_Block_(placed).png
+Mousse d'argon > Argon_Moss_Block_(placed).png
 Bloc de pierre améthyste > Amethyst_(placed).png
 Bloc de topaze > Topaz_(placed).png
 Bloc de saphir > Sapphire_(placed).png
