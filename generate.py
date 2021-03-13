@@ -99,12 +99,15 @@ Marble Block
 Smooth Marble Block
 Granite Block
 Smooth Granite Block
-Blue Moss Block
-Red Moss Block
-Chartreuse Moss Block
-Teal Moss Block
-Purple Moss Block
-Fire Moss Block
+Green Moss > Teal_Moss_Block_(placed).png
+Brown Moss > Chartreuse_Moss_Block_(placed).png
+Red Moss > Red_Moss_Block_(placed).png
+Blue Moss > Blue_Moss_Block_(placed).png
+Purple Moss > Purple_Moss_Block_(placed).png
+Lava Moss > Fire_Moss_Block_(placed).png
+Krypton Moss > Krypton_Moss_Block_(placed).png
+Xenon Moss > Xenon_Moss_Block_(placed).png
+Argon Moss > Argon_Moss_Block_(placed).png
 Amethyst Stone Block > Amethyst_(placed).png
 Topaz Stone Block > Topaz_(placed).png
 Sapphire Stone Block > Sapphire_(placed).png
