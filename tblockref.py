@@ -143,10 +143,12 @@ class Reference:
         """
         # Embedding all images into the file.
         for block in self._block_dict:
+            extension = os.path.splitext(self._block_dict[block]["sprite_href"])[1][1:]
             with open(self._block_dict[block]['sprite_href'], "rb") as f:
                 self._block_dict[block]['sprite_href'] = (
-                    f'data:image/{os.path.splitext(self._block_dict[block]["sprite_href"])[1][1:]};base64,'
-                    + base64.b64encode(f.read()).decode())
+                    f'data:image/{extension};base64,'
+                    + base64.b64encode(f.read()).decode()
+                )
 
         # Loading font information and template.
         with open('svg_template.svg.jinja', 'r') as f:
