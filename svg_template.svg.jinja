@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="{{ svg_width }}" height="{{ svg_height }}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="{{ svg_width }}" height="{{ svg_height }}"
+xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     {% for id in svg_glyphs %}
-    <path id="{{ id }}" d="{{ svg_glyphs[id].d }}" transform="scale({{ text_scale }},{{ -text_scale }})"/>
+    <path id="{{ id }}" transform="scale({{ text_scale }},{{ -text_scale }})"
+    d="{{ svg_glyphs[id].d }}" />
     {% endfor %}
   </defs>
   <rect width="{{ svg_width }}" height="{{ svg_height }}" fill="#fff"/>
-  <g image-rendering="optimizeSpeed" style="image-rendering: pixelated">
+  <g image-rendering="optimizeSpeed" style="image-rendering:pixelated">
     {% for block in block_values %}
-    <image x="{{ '%0.2f' % block.sprite_x }}" y="{{ block.sprite_y }}" width="{{ block.sprite_width }}" height="{{ block.sprite_height }}" xlink:href="{{ block.sprite_href }}"/>
+    <image x="{{ '%0.2f' % block.sprite_x }}" y="{{ block.sprite_y }}"
+    width="{{ block.sprite_width }}" height="{{ block.sprite_height }}"
+    xlink:href="{{ block.sprite_href }}"/>
     {% endfor %}
   </g>
   {% for block in block_values %}
-    {# I have to use namespace() here becouse scope protection in newer versions of jinja does not allow changing a variable in a loop if it was set outside of that loop #}
-    {% set position_x = namespace(value = block.text_x) %}
+    {# I have to use namespace() here becouse scope protection in newer versions
+    of jinja does not allow changing a variable in a loop if it was set outside
+    of that loop #}
+    {% set pos_x = namespace(value = block.text_x) %}
     {% for id in block.text_tspan_unicode_list %}
-  <use xlink:href="#{{ id }}" x="{{ '%0.2f' % position_x.value }}"  y="{{ block.text_y }}" />
-      {% set position_x.value = position_x.value + svg_glyphs[id]['horiz-adv-x'] * text_scale %}
+  <use xlink:href="#{{ id }}" x="{{ '%0.2f' % pos_x.value }}"  y="{{ block.text_y }}" />
+      {% set pos_x.value = pos_x.value + svg_glyphs[id]['horiz-adv-x'] * text_scale %}
     {% endfor %}
   {% endfor %}
 </svg>
