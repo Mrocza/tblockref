@@ -63,8 +63,8 @@ class Reference:
             # Sprites have a nominal resolution of 24x24 px.
             'sprite_width': 24 * self._scale,
             'sprite_height': 24 * self._scale,
-            # text is shifted 27px right and 11px down from sprite position
-            'text_x': self._pos_x + 27*self._scale,
+            # text is shifted 30px right and 11px down from sprite position
+            'text_x': self._pos_x + 30*self._scale,
             'text_y': self._pos_y + 11*self._scale,
             'text_tspan': block_name,
             'text_tspan_unicode_list': unicode_list,
@@ -73,6 +73,12 @@ class Reference:
                 for id in unicode_list]
             )
         }
+
+        if self._iswall(block_name):
+            self._block_dict[block_name]['sprite_x'] -= 4 * self._scale
+            self._block_dict[block_name]['sprite_y'] -= 4 * self._scale
+            self._block_dict[block_name]['sprite_width'] = 32 * self._scale
+            self._block_dict[block_name]['sprite_height'] = 32 * self._scale
 
         # Advancing to next slot position. One slot is 12px wide.
         self._pos_y += 12*self._scale
@@ -103,8 +109,8 @@ class Reference:
         modification date is newer than for the locally stored resource.
         Returns True if succesful and False when it fails.
         """
-        if local_only:
-            return os.path.isfile('res/' + file_name)
+        if local_only and os.path.isfile('res/' + file_name):
+            return True
 
         try:
             response = urllib.request.urlopen(
@@ -136,6 +142,11 @@ class Reference:
         if mod_date > last_update:
             urllib.request.urlretrieve(image_href, 'res/'+file_name)
         return True
+
+    def _iswall(self, block_name):
+        for i in ['Wall', 'Stained', 'Fence', 'Sail']:
+            if i in block_name: return True
+        return False
 
     def out(self, output):
         """
