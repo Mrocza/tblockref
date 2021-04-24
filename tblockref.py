@@ -18,6 +18,7 @@ class Reference:
         self._block_dict = dict()
         self._height = int()
         self._width = int()
+        self._column_id = 0
 
         # First slot in the reference starts off of the margin values.
         self._pos_x = self._margin
@@ -41,15 +42,7 @@ class Reference:
         print(f'Adding block {block_name} ...')
 
         if not file_name:
-            # If the filename is not specified a guess is made based on block
-            # name with both png and gif extensions tested.
             file_name = block_name.replace(' ','_') + '_(placed)'
-            for format in ['.png', '.gif']:
-                if self._getfile(file_name + format):
-                    file_name += format
-                    break
-        else:
-            self._getfile(file_name)
 
         # List of unicode codes for each character in blockname.
         # This is neccessary for font handling.
@@ -58,13 +51,14 @@ class Reference:
         # Setting data for current block
         self._block_dict[block_name] = {
             'sprite_href': 'res/'+file_name,
+            'column_id': self._column_id,
             'sprite_x': self._pos_x,
             'sprite_y': self._pos_y,
             # Sprites have a nominal resolution of 24x24 px.
             'sprite_width': 24 * self._scale,
             'sprite_height': 24 * self._scale,
             # text is shifted 30px right and 11px down from sprite position
-            'text_x': self._pos_x + 30*self._scale,
+            'text_x': self._pos_x + 27*self._scale,
             'text_y': self._pos_y + 11*self._scale,
             'text_tspan': block_name,
             'text_tspan_unicode_list': unicode_list,
@@ -79,9 +73,14 @@ class Reference:
             self._block_dict[block_name]['sprite_y'] -= 4 * self._scale
             self._block_dict[block_name]['sprite_width'] = 32 * self._scale
             self._block_dict[block_name]['sprite_height'] = 32 * self._scale
+            self._block_dict[block_name]['text_x'] += 3 * self._scale
+            self._block_dict[block_name]['text_y'] -= 3 * self._scale
+
+        # Downloading the sprite
+        self._getfile(block_name, file_name)
 
         # Advancing to next slot position. One slot is 12px wide.
-        self._pos_y += 12*self._scale
+        self._pos_y += 12 * self._scale
 
         # Adjusting document height to the highest y value reached.
         if self._height < self._pos_y + 12*self._scale:
@@ -93,24 +92,34 @@ class Reference:
         """
         # Resetting y value back to top.
         self._pos_y = self._margin
+        # Filtering data to current column
+        data = [v for v in self._block_dict.values()
+                if v['column_id'] == self._column_id]
         # Checking max name width in the column and advancing position.
-        name_widths = [self._block_dict[block_name]['text_tspan_width']
-            for block_name in self._block_dict]
-        self._pos_x += max(name_widths) + 27*self._scale + self._margin
-        # Resetting widths to not interfere with future columns.
-        for block_name in self._block_dict:
-            self._block_dict[block_name]['text_tspan_width'] = 0
+        max_name_width = max([v['text_tspan_width'] for v in data])
+        max_sprite_width = max([v['sprite_width'] for v in data])
+        self._pos_x += max_name_width + max_sprite_width + self._margin
+
         # Increasing document width to fit new column.
         self._width = self._pos_x
+        # Advancing column id
+        self._column_id += 1
 
-    def _getfile(self, file_name, local_only = True):
+    def _getfile(self, block_name, file_name, local_only = True):
         """
         Gets a direct image link from the wiki and downloads that image if the
         modification date is newer than for the locally stored resource.
         Returns True if succesful and False when it fails.
         """
-        if local_only and os.path.isfile('res/' + file_name):
-            return True
+        if local_only:
+            for format in ['', '.png', '.gif']:
+                if os.path.isfile('res/' + file_name + format):
+                    self._block_dict[block_name]['sprite_href'] += format
+                    return True
+
+        if os.path.splitext(file_name)[1] == '':
+            if not _getfile(file_name + '.png'):
+                _getfile(file_name + '.gif')
 
         try:
             response = urllib.request.urlopen(
@@ -141,6 +150,8 @@ class Reference:
         # Downloading if newer.
         if mod_date > last_update:
             urllib.request.urlretrieve(image_href, 'res/'+file_name)
+
+        self._block_dict[block_name]['sprite_href'] = 'res/'+file_name
         return True
 
     def _iswall(self, block_name):
