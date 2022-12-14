@@ -8,9 +8,10 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 class Reference:
-    def __init__(self, scale = 2, margin = 6):
+    def __init__(self, scale = 2, margin = 6, unicode = False):
         self._margin = margin
         self._scale = scale
+        self.unicode = unicode
         # Nominally the svg font used here is about 1024pt in size.
         # Number listed below brings it down to about 12pt (with scale = 2).
         self._text_scale = 0.00586 * scale
@@ -57,7 +58,7 @@ class Reference:
             # Sprites have a nominal resolution of 24x24 px.
             'sprite_width': 24 * self._scale,
             'sprite_height': 24 * self._scale,
-            # text is shifted 30px right and 11px down from sprite position
+            # text is shifted 27px right and 11px down from sprite position
             'text_x': self._pos_x + 27*self._scale,
             'text_y': self._pos_y + 11*self._scale,
             'text_tspan': block_name,
