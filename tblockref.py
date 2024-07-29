@@ -44,6 +44,9 @@ class Reference:
 
         if not file_name:
             file_name = block_name.replace(' ','_') + '_(placed)'
+            for format in ['', '.png', '.gif']:
+                if os.path.isfile('res/' + file_name + format):
+                    file_name += format
 
         # List of unicode codes for each character in blockname.
         # This is neccessary for font handling.
@@ -77,9 +80,6 @@ class Reference:
             self._block_dict[block_name]['text_x'] += 3 * self._scale
             self._block_dict[block_name]['text_y'] -= 3 * self._scale
 
-        # Downloading the sprite
-        self._getfile(block_name, file_name)
-
         # Advancing to next slot position. One slot is 12px wide.
         self._pos_y += 12 * self._scale
 
@@ -105,55 +105,6 @@ class Reference:
         self._width = self._pos_x
         # Advancing column id
         self._column_id += 1
-
-    def _getfile(self, block_name, file_name, local_only = True):
-        """
-        Gets a direct image link from the wiki and downloads that image if the
-        modification date is newer than for the locally stored resource.
-        Returns True if succesful and False when it fails.
-        """
-        if local_only:
-            for format in ['', '.png', '.gif']:
-                if os.path.isfile('res/' + file_name + format):
-                    self._block_dict[block_name]['sprite_href'] += format
-                    return True
-
-        if os.path.splitext(file_name)[1] == '':
-            if not _getfile(file_name + '.png'):
-                _getfile(file_name + '.gif')
-
-        try:
-            response = urllib.request.urlopen(
-                'https://terraria.gamepedia.com/File:'+file_name)
-        except urllib.error.HTTPError as e:
-            # Return code error (e.g. 404, 501, ...)
-            print(f'{file_name} HTTPError: {e.code}')
-            return False
-        except urllib.error.URLError as e:
-            # Not an HTTP-specific error (e.g. connection refused)
-            print(f'{file_name} URLError: {e.reason}')
-            return False
-
-        # Retrieving a direct image url.
-        soup = BeautifulSoup(response.read(), 'html.parser')
-        image_href = soup.find("div", {"class": "fullMedia"}).a['href']
-        # Getting last modification timestamp from the url parameter 'cb'.
-        parsed = urllib.parse.urlparse(image_href)
-        mod_date_string = (urllib.parse.parse_qs(parsed.query)['cb'])[0]
-        mod_date = datetime.strptime(mod_date_string, '%Y%m%d%H%M%S')
-        # Getting last modification timestamp for local file.
-        if os.path.isfile('res/'+file_name):
-            last_update = datetime.fromtimestamp(
-                os.path.getmtime('res/'+file_name)
-            )
-        else:
-            last_update = datetime(1970,1,1)
-        # Downloading if newer.
-        if mod_date > last_update:
-            urllib.request.urlretrieve(image_href, 'res/'+file_name)
-
-        self._block_dict[block_name]['sprite_href'] = 'res/'+file_name
-        return True
 
     def _iswall(self, block_name):
         for i in ['Wall', 'Stained', 'Fence', 'Sail']:
